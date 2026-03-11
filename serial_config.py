@@ -1,0 +1,5 @@
+LEFT_PORT = "/dev/ttyUSB0"
+RIGHT_PORT = "/dev/ttyUSB1"
+BAUD_RATE = 115200
+TIMEOUT = 0.2
+SLAVE_ID = 1
