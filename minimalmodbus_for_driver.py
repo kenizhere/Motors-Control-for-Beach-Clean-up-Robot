@@ -1,6 +1,7 @@
 import minimalmodbus
-import serial
+# import serial (check back when needed for more advanced serial configuration)
 from serial_config import BAUD_RATE, TIMEOUT, SLAVE_ID
+from math import pi
 
 """
 Important registers for motor control: 
@@ -67,8 +68,12 @@ class MotorDriver:
         # Start motor, reverse direction, no brake (00000111 00000011 in binary)
         self.write_register(0x8106, 0x0703)
     
-    def stop(self):
+    def stop_without_brake(self):
         # Stop motor, no brake (00000111 00000100 in binary)
+        self.write_register(0x8106, 0x0700)
+
+    def stop_with_brake(self):
+        # Stop motor, with brake (00000111 00000100 in binary)
         self.write_register(0x8106, 0x0704)
 
     def set_speed(self, speed):
@@ -76,11 +81,12 @@ class MotorDriver:
 
     # Read the speed register and return the speed in RPM 
     def read_speed(self):
-        return self.read_register(0x8206)  
-    
+        speed_in_rpm = self.read_register(0x8206) 
+        return speed_in_rpm
+
     # Read the voltage register and return the voltage in volts (value is in 0.1V units)
     def read_voltage(self):
-        return self.read_register(0x820B) # example: 240=24V
+        print(self.read_register(0x820B)) # example: 240=24V
 
     # Read the alarm status register and print out any active alarms
     def read_alarm(self):
